@@ -1,13 +1,10 @@
 import express from "express";
 import { createLab, getLabs } from "./controllers/lab.controller.js";
-import authMiddleware from "../auth/auth.middleware.js";
+import { protect, authorize } from "../auth/auth.middleware.js";
 
 const router = express.Router();
 
-// Public
 router.get("/", getLabs);
+router.post("/", protect, authorize("admin"), createLab);
 
-// Protected
-router.post("/", authMiddleware, createLab);
-
-export default router;  
+export default router;
