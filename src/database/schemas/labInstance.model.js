@@ -14,20 +14,18 @@ const labInstanceSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["running", "completed", "expired"],
+      enum: ["running", "stopped"],
       default: "running",
     },
     startedAt: {
       type: Date,
       default: Date.now,
     },
-    completedAt: {
+    stoppedAt: {
       type: Date,
-    }
+    },
   },
   { timestamps: true }
 );
 
-const LabInstance = mongoose.model("LabInstance", labInstanceSchema);
-
-export default LabInstance;
+export default mongoose.model("LabInstance", labInstanceSchema);

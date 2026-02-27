@@ -35,3 +35,35 @@ export const startLab = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const stopLab = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const instance = await LabInstance.findById(id);
+
+    if (!instance) {
+      return res.status(404).json({ message: "Instance not found" });
+    }
+
+    if (instance.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    if (instance.status === "stopped") {
+      return res.status(400).json({ message: "Instance already stopped" });
+    }
+
+    instance.status = "stopped";
+    instance.stoppedAt = new Date();
+
+    await instance.save();
+
+    res.json({
+      message: "Lab stopped successfully",
+      instance,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
